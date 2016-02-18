@@ -14,6 +14,41 @@ frontend www
 
 Last Update: 2016-02-18
 
+#### Creating your own IP Ranges List
+
+Compile iprange tool
+
+Download /tool folder then run make or download the tool from http://www.haproxy.org/git/?p=haproxy.git;a=tree;f=contrib/iprange 
+
+``` shell
+make
+gcc -s -O3 -o iprange iprange.c
+```
+
+Download GeoIPCountryCSV.zip from the maxmind
+
+Check the csv file
+
+``` shell
+$ head GeoIPCountryWhois.csv
+```
+
+Cut it for iprange
+
+``` shell
+$ cut -d, -f1,2,5 GeoIPCountryWhois.csv | head
+$ cut -d, -f1,2,5 GeoIPCountryWhois.csv | head | ./iprange
+```
+
+Create subnets files
+
+``` shell
+$ cut -d, -f1,2,5 GeoIPCountryWhois.csv | ./iprange | sed 's/"//g' | awk -F' ' '{ print $1 >> $2".subnets" }'
+```
+
 ##### Thanks to:
 
 @Maxmind for the GeoIP Lite
+
+@[Willy](http://1wt.eu/) for the iprange tool
+
